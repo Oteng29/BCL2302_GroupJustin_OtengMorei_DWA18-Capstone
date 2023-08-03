@@ -1,0 +1,209 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align:center;
+  background-color: black
+}
+
+.text-color {
+  color: white;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+h5 {
+  font-family: "Lucida" Grande, sans-serif;
+}
+
+/* Card component */
+
+.text--color {
+  color: white;
+}
+
+.card {
+  width: 175px;
+  font-size: 14px;
+  padding: 10px;
+  position: relative;
+  transition: transform 0.4s;
+}
+
+.card:hover {
+  transform: translateY(-20px) rotateX(10deg);
+}
+
+.card--image {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.genre--title {
+  color: rgb(25, 133, 150);
+}
+
+h3 {
+  color: rgb(45, 96, 113);
+}
+
+/* App Bar */
+
+.Login {
+  color: white;
+}
+
+.nav {
+  background-color: rgb(19, 20, 20);
+  box-shadow: 0px 2.98256px 7.4564px rgba(15, 14, 14, 0.1);
+}
+
+/* Search button */
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.search-button {
+  background-color: #2f3842;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.search-button:hover {
+  background-color: #747679;
+}
+
+
+/* Show more button */
+
+.show-more-button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.show-more-button:hover {
+  background-color: #0056b3;
+}
+
+/* Sort by A-Z */
+
+/* SortByButton.css */
+
+.sort-container,
+.filter-container {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.sort-by span,
+.filter-by-genre span {
+  margin-right: 5px;
+}
+
+.sort-by select,
+.filter-by-genre select {
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+
+/* App.css */
+
+.sort-container {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.sort-container span {
+  margin-right: 10px;
+}
+
+.sort-container select {
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.sort-option {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+
+
+/* Back to top */
+
+.back-to-top-button {
+  /* position: fixed;
+  bottom: 20px;
+  right: 20px; */
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.back-to-top-button:hover {
+  background-color: #0056b3;
+}
+
+/* Back to Homepage */
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.back-button {
+  padding: 10px 20px;
+  background-color: #3e3f40;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.back-button:hover {
+  background-color: #9a9ea1;
+}
+
+.back-button:focus {
+  outline: none;
+}
+
+/* Favourite Icon button */
+
+.Favorite-Icon {
+  color: red;
+}
