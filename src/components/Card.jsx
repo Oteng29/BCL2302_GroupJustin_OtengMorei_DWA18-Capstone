@@ -27,9 +27,9 @@ export default function Card(props) {
 
     return (
 
-        <Grid item xs={4} className="card">
+        <Grid item xs={4} className="card" onClick={props.click}>
 
-            <img src={props.images} className='card--image' alt={props.titles} onClick={handleOpenPreview} style={{ cursor: 'pointer' }} />
+            <img src={props.images} className='card--image' alt={props.titles} /* onClick={handleOpenPreview} */ style={{ cursor: 'pointer' }} />
             <p>{props.id}</p>
             <Box
                 sx={{
@@ -40,7 +40,7 @@ export default function Card(props) {
                 <Rating name="customized-10" defaultValue={2} max={5} />
 
             </Box>
-            {showPreview && <Preview id={id} onClose={handleClosePreview} />}
+            {showPreview && <Preview  onClose={handleClosePreview} />}
             <h2 className="text--color" >{props.titles}</h2>
             <h4 className="text--color">Season {props.seasons}</h4>
             <h4 className="genre--title">{props.genres}</h4>

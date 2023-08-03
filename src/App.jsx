@@ -10,6 +10,7 @@ import FilterByGenre from './components/FilterByGenre';
 // import season from './components/Season'
 // import Login from './components/Login';
 import supabase from './supabase';
+import Seasons from './components/Season';
 import './App.css';
 
 
@@ -31,8 +32,12 @@ function App() {
   const [numCardsToShow, setNumCardsToShow] = useState(9);
   const [searching, setSearching] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState('');
+  const [theSeasons, setTheSeasons ] = useState('');
   // const [user, setUser] = useState(null);
 
+  function ApiId(id){
+    setTheSeasons(id)
+  }
 
   useEffect(() => {
     // Fetch data from the API when the component mounts
@@ -49,6 +54,7 @@ function App() {
             seasons={datamapping.seasons}
             genres={datamapping.genres.map(genreID => genreMapping[genreID])}
             updated={datamapping.updated}
+            click = {() => ApiId(datamapping.id)}
           />
         ));
         setFeature(mapData);
@@ -121,6 +127,10 @@ function App() {
     // <button onClick={login}>Login</button>
     //       {user ? ( // If user is authenticated, show the main content
     <>
+
+    <Seasons
+      id = {theSeasons}
+    />
       <div>
 
         <Navbar />

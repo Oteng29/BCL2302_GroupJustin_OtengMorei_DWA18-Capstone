@@ -1,62 +1,39 @@
-import React, { useState, useEffect } from 'react';
+// import React, { useState, useEffect } from 'react';
 
-const Preview = ({ podcastId, onClose }) => {
-  const [seasons, setSeasons] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+import { useEffect, useState } from "react";
 
-  const fetchPodcastById = async (podcastId) => {
-    try {
-      const response = await fetch(`https://podcast-api.netlify.app/id/${podcastId}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch podcast data.');
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.log(`Error fetching podcast with ID ${podcastId}:`, error);
-      setError(error);
-      return null;
-    }
-  };
+export default function Seasons(prop) {
+
+  const [showSeasons, setShowSeasons] = useState(null)
 
   useEffect(() => {
-    // Fetch data for the seasons and episodes from the API URL
-    fetchPodcastById(podcastId)
-      .then(data => {
-        setSeasons(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        setError(error);
-        setLoading(false);
-      });
-  }, [podcastId]);
+    if (prop.id) {
+      fetch(`https://podcast-api.netlify.app/id/${prop.id}`)
+        .then(response => response.json())
+        .then(data => {
+          const seasons = data.seasons
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+          const seasonsdata = seasons.map((item) => {
+            return (
+              <>
+                <p className="text-color">{item.title}</p>
+                <img className="card--image" src={item.image}></img>
+              </>
+            )
+          })
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+          setShowSeasons(seasonsdata)
+        })
+    }
+  }, [prop.id])
 
   return (
-    <div className="preview">
-      <h2>Seasons and Episodes</h2>
-      <button onClick={onClose}>Close</button>
-      {seasons.map(season => (
-        <div key={season.id}>
-          <h3>Season {season.number}</h3>
-          <ul>
-            {season.episodes.map(episode => (
-              <li key={episode.id}>{episode.title}</li>
-            ))}
-          </ul>
+    <div className="card-container">
+      {showSeasons && showSeasons.map((season, index) => (
+        <div key={index} className="card">
+          {season}
         </div>
       ))}
     </div>
   );
-};
-
-export default Preview;
+}
