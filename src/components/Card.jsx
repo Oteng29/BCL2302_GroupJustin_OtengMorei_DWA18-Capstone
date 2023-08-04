@@ -5,13 +5,13 @@ import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
 import Button from '@mui/material/Button';
-import Season from './Season';
 import Preview from './Season'
 
 
 export default function Card(props) {
     const [showFullDescription, setShowFullDescription] = React.useState(false);
     const [showPreview, setShowPreview] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const toggleMoreInfo = () => {
         setShowFullDescription(!showFullDescription);

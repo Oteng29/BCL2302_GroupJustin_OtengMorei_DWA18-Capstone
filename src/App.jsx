@@ -7,10 +7,12 @@ import BackToTopButton from './components/BackToTop';
 import ShowMoreButton from './components/ShowMore';
 import SortByButton from './components/SortBy';
 import FilterByGenre from './components/FilterByGenre';
-// import season from './components/Season'
-// import Login from './components/Login';
-import supabase from './supabase';
+import Super from './components/Super'
+import { supabase } from './components/Super';
 import Seasons from './components/Season';
+import Carousel from './components/Carousel';
+import CircularProgress from '@mui/material/CircularProgress';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import './App.css';
 
 
@@ -32,14 +34,29 @@ function App() {
   const [numCardsToShow, setNumCardsToShow] = useState(9);
   const [searching, setSearching] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState('');
-  const [theSeasons, setTheSeasons ] = useState('');
-  // const [user, setUser] = useState(null);
+  const [theSeasons, setTheSeasons] = useState('');
+  const [throwSignUp, setThrowSignUp] = useState('signUpPhase')
+  const [loading, setLoading] = useState(true);
 
-  function ApiId(id){
+
+  function ApiId(id) {
     setTheSeasons(id)
   }
 
+  React.useEffect(() => {
+    const authListener = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" && session) {
+        console.log("User signed in successfully:", session.user.email);
+        setThrowSignUp('PreviewPhase')
+      }
+    });
+    return () => {
+      authListener.unsubscribe;
+    };
+  }, []);
+
   useEffect(() => {
+    setLoading(true);
     // Fetch data from the API when the component mounts
     fetch("https://podcast-api.netlify.app/shows")
       .then(response => response.json())
@@ -54,11 +71,12 @@ function App() {
             seasons={datamapping.seasons}
             genres={datamapping.genres.map(genreID => genreMapping[genreID])}
             updated={datamapping.updated}
-            click = {() => ApiId(datamapping.id)}
+            click={() => ApiId(datamapping.id)}
           />
         ));
         setFeature(mapData);
         setShowMore(true);
+        setLoading(false);
       });
   }, []); // Empty dependency array ensures that this effect runs only once when the component mounts
 
@@ -111,64 +129,65 @@ function App() {
     }
   };
 
-  // Function to handle user login
-  // const handleLogin = (loggedInUser) => {
-  //   setUser(loggedInUser);
-  // };
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <CircularProgress size={60} />
+        <h2>Loading...</h2>
+      </div>
+    );
+  }
 
-  // const login = async() => {
-  //   await supabase.auth.signInWithOAuth({
-  //     provider: "github"
-  //   })
-  // }
 
   return (
-    //     <>
-    // <button onClick={login}>Login</button>
-    //       {user ? ( // If user is authenticated, show the main content
+
     <>
+      {throwSignUp === 'signUpPhase' && <Super />}
+      {throwSignUp === 'PreviewPhase' &&
 
-    <Seasons
-      id = {theSeasons}
-    />
-      <div>
+        <>
+          <Carousel/>
+          <Seasons
+            id={theSeasons}
+          />
+          <div>
 
-        <Navbar />
-      </div>
+            <Navbar />
+          </div>
 
-      <br />
+          <br />
+      
+          <br />
+          <div>
+            <SearchBar onSearch={handleSearch} />
 
-      <div>
-        <SearchBar onSearch={handleSearch} />
+          </div>
+          <br />
 
-      </div>
-      <br />
-      {/* <div className="sort-container">
-        <SortByButton onSort={handleSort} />
-      </div> */}
-      <div className="filter-sort-container">
-        <FilterByGenre genres={genreMapping} selectedGenre={selectedGenre} onChange={handleFilterByGenre} />
-        <SortByButton onSort={handleSort} />
-      </div>
-      <br />
-      <div className="button-container">
+          <div className="filter-sort-container">
+            <FilterByGenre genres={genreMapping} selectedGenre={selectedGenre} onChange={handleFilterByGenre} />
+            <SortByButton onSort={handleSort} />
+          </div>
+          <br />
+          <div className="button-container">
 
-      </div>
-      <br />
-      <Grid container spacing={4}>
-        {feature.slice(0, numCardsToShow)}
-      </Grid>
-      {searching && <button className='back-button' onClick={handleGoBackToHomePage}>Go Back</button>}
-      <br />
-      {showMore && <ShowMoreButton onClick={handleShowMore} />}
-      <br />
-      <br />
-      <BackToTopButton />
+          </div>
+          <br />
+          <Grid container spacing={4}>
+            {feature.slice(0, numCardsToShow)}
+          </Grid>
+  { searching && <button className='back-button' onClick={handleGoBackToHomePage}>Go Back</button> }
+  <br />
+  { showMore && <ShowMoreButton onClick={handleShowMore} /> }
+          <br />
+          <br />
+          <BackToTopButton />
+
+
+        </>
+      }
     </>
-    //     ) : ( // If user is not authenticated, show the login component
-    //     <Login onLogin={handleLogin} />
-    //   )}
-    // </>
+
   );
 }
 

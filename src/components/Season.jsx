@@ -1,10 +1,10 @@
-// import React, { useState, useEffect } from 'react';
-
 import { useEffect, useState } from "react";
+
 
 export default function Seasons(prop) {
 
   const [showSeasons, setShowSeasons] = useState(null)
+  // const [selectedSeason, setSelectedSeason] = useState(null);
 
   useEffect(() => {
     if (prop.id) {
@@ -18,6 +18,24 @@ export default function Seasons(prop) {
               <>
                 <p className="text-color">{item.title}</p>
                 <img className="card--image" src={item.image}></img>
+                
+                        {item.episodes.map((episode, episodeIndex) => {
+                            return (
+                                <li className="text-color" key={episodeIndex}>
+                                    {episode.title}
+                                    <br/>
+                                    <br/>
+                                    {episode.description}
+                                    <br/>
+                                    <br/>
+                                    <audio controls>
+                                        <source src={episode.file} type='audio/mpeg' />
+                                    </audio>
+                                </li>
+                            )
+                        }
+                        )}
+                    
               </>
             )
           })
@@ -26,6 +44,19 @@ export default function Seasons(prop) {
         })
     }
   }, [prop.id])
+
+  // const fetchShowDetails = async (showId) => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await axios.get(`https://podcast-api.netlify.app/id/${showId}`);
+  //     const data = response.data;
+  //     setShowData(data);
+  //     setSelectedSeason(null);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error('Error fetching show details:', error);
+  //   }
+  // };
 
   return (
     <div className="card-container">
