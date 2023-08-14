@@ -11,25 +11,16 @@ import Preview from './Season'
 export default function Card(props) {
     const [showFullDescription, setShowFullDescription] = React.useState(false);
     const [showPreview, setShowPreview] = useState(false);
-    const [loading, setLoading] = useState(true);
 
     const toggleMoreInfo = () => {
         setShowFullDescription(!showFullDescription);
     }
 
-    const handleOpenPreview = () => {
-        setShowPreview(true);
-    };
-
-    const handleClosePreview = () => {
-        setShowPreview(false);
-    };
-
     return (
 
-        <Grid item xs={4} className="card" onClick={props.click}>
+        <Grid item xs={4} className="card" >
 
-            <img src={props.images} className='card--image' alt={props.titles} /* onClick={handleOpenPreview} */ style={{ cursor: 'pointer' }} />
+            <img src={props.images} className='card--image' alt={props.titles} /* onClick={handleOpenPreview} */ style={{ cursor: 'pointer' }} onClick={props.click}/>
             <p>{props.id}</p>
             <Box
                 sx={{

@@ -6,6 +6,16 @@
   background-color: black
 }
 
+.seasons-div{
+  display: none;
+}
+
+.episode-count {
+  font-size: 12px;
+  color: gray;
+}
+
+
 .text-color {
   color: white;
 }
@@ -160,9 +170,6 @@ input {
 /* Back to top */
 
 .back-to-top-button {
-  /* position: fixed;
-  bottom: 20px;
-  right: 20px; */
   padding: 10px 15px;
   background-color: #007bff;
   color: #fff;

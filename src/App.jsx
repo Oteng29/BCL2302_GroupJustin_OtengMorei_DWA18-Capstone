@@ -6,7 +6,6 @@ import SearchBar from './components/SearchBar';
 import BackToTopButton from './components/BackToTop';
 import ShowMoreButton from './components/ShowMore';
 import SortByButton from './components/SortBy';
-import FilterByGenre from './components/FilterByGenre';
 import Super from './components/Super'
 import { supabase } from './components/Super';
 import Seasons from './components/Season';
@@ -57,33 +56,42 @@ function App() {
 
   useEffect(() => {
     setLoading(true);
-    // Fetch data from the API when the component mounts
-    fetch("https://podcast-api.netlify.app/shows")
-      .then(response => response.json())
-      .then(data => {
-        const mapData = data.map(datamapping => (
-          <Card
-            // press={() => { setseasonInStore(datamapping.id) }}
-            key={datamapping.id}
-            titles={datamapping.title}
-            images={datamapping.image}
-            descriptions={datamapping.description}
-            seasons={datamapping.seasons}
-            genres={datamapping.genres.map(genreID => genreMapping[genreID])}
-            updated={datamapping.updated}
-            click={() => ApiId(datamapping.id)}
-          />
-        ));
-        setFeature(mapData);
-        setShowMore(true);
-        setLoading(false);
-      });
+
+    setTimeout(() => {
+      // Fetch data from the API when the component mounts
+      fetch("https://podcast-api.netlify.app/shows")
+        .then(response => response.json())
+        .then(data => {
+          const mapData = data.map(datamapping => (
+            <Card
+              key={datamapping.id}
+              titles={datamapping.title}
+              images={datamapping.image}
+              descriptions={datamapping.description}
+              seasons={datamapping.seasons}
+              genres={datamapping.genres.map(genreID => genreMapping[genreID]).join(" , ")}
+              updated={datamapping.updated}
+              click={() => {
+                ApiId(datamapping.id)
+                setNumCardsToShow(null)
+                document.querySelector('.seasons-div').style.display = 'block'
+              }}
+            />
+          ));
+          setFeature(mapData);
+          setShowMore(true);
+          setLoading(false);
+        });
+    }, 2000);
   }, []); // Empty dependency array ensures that this effect runs only once when the component mounts
 
-  const handleFilterByGenre = (event) => {
-    setSelectedGenre(event.target.value);
-  };
+  const genreFilteredFeature = selectedGenre
+    ? feature.filter((datamapping) =>
+      datamapping.props.genres.includes(genreMapping[selectedGenre])
+    )
+    : feature;
 
+  // Search-bar
   const handleSearch = (searchTerm) => {
     const filteredData = feature.filter(datamapping =>
       datamapping.props.titles.toLowerCase().includes(searchTerm.toLowerCase())
@@ -92,6 +100,7 @@ function App() {
     setSearching(true);
   };
 
+  //Back to Homepage button 
   const handleGoBackToHomePage = () => {
 
     const homepageURL = 'http://localhost:5175/';
@@ -101,11 +110,13 @@ function App() {
   };
 
 
-
+  //Show-more button
   const handleShowMore = () => {
     setNumCardsToShow(prevNum => prevNum + 9);
+    document.querySelector('.seasons-div').style.display = 'none'
   };
 
+  //Sort-by 
   const handleSort = (option) => {
     switch (option) {
       case 'asc':
@@ -129,13 +140,21 @@ function App() {
     }
   };
 
+  //Loading state
   if (loading) {
     return (
       <div className="loading-container">
         <CircularProgress size={60} />
-        <h2>Loading...</h2>
+        <h2 className='text-color'>Loading...</h2>
       </div>
     );
+  }
+
+  //Select genre on (Filter by:)
+  function handleChange(id) {
+
+    setSelectedGenre(id)
+
   }
 
 
@@ -146,48 +165,68 @@ function App() {
       {throwSignUp === 'PreviewPhase' &&
 
         <>
-          <Carousel/>
-          <Seasons
-            id={theSeasons}
-          />
+          <Carousel />
           <div>
 
             <Navbar />
           </div>
 
           <br />
-      
+
           <br />
           <div>
             <SearchBar onSearch={handleSearch} />
 
           </div>
-          <br />
 
-          <div className="filter-sort-container">
-            <FilterByGenre genres={genreMapping} selectedGenre={selectedGenre} onChange={handleFilterByGenre} />
+          <div className="Card-Box">
+            <h3>Filter by Genre:</h3>
+            {Object.entries(genreMapping).map(([genreId, genreTitle]) => (
+              // console.log(genreId),
+              <button
+                key={genreId}
+                onClick={() => handleChange(genreId)}
+                style={{
+                  backgroundColor:
+                    selectedGenre === parseInt(genreId) ? 'blue' : 'lightblue',
+                  color: selectedGenre === parseInt(genreId) ? 'white' : 'black',
+                  border: '1px solid blue',
+                  padding: '5px',
+                  margin: '2px',
+                  cursor: 'pointer',
+                }}
+              >
+                {genreTitle}
+              </button>
+            ))}
+          </div>
+
+          <br />
+          <div >
             <SortByButton onSort={handleSort} />
           </div>
           <br />
-          <div className="button-container">
-
-          </div>
           <br />
-          <Grid container spacing={4}>
-            {feature.slice(0, numCardsToShow)}
+          <Grid container spacing={4} >
+            {genreFilteredFeature.slice(0, numCardsToShow).map(card => card)}
+
           </Grid>
-  { searching && <button className='back-button' onClick={handleGoBackToHomePage}>Go Back</button> }
-  <br />
-  { showMore && <ShowMoreButton onClick={handleShowMore} /> }
+
+          <div className='seasons-div'>
+            <button onClick={handleShowMore}>Back to shows</button>
+            <Seasons
+              id={theSeasons}
+            />
+          </div>
+          {searching && <button className='back-button' onClick={handleGoBackToHomePage}>Go Back</button>}
+          <br />
+          {showMore && <ShowMoreButton onClick={handleShowMore} />}
           <br />
           <br />
           <BackToTopButton />
-
-
         </>
       }
     </>
-
   );
 }
 
